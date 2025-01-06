@@ -12,12 +12,12 @@ extends Node
 # A strongly typed global logger signal
 signal Logger(level:int, message:String)
 
-var Console_min_log_level:int = 0
+static var Console_min_log_level:int = 0
 
 # Main game layers. Instantiated via code.
-var UI:CanvasLayer = null
-var World:CanvasLayer = null
-var BG:CanvasLayer = null
+static var UI:CanvasLayer = null
+static var World:CanvasLayer = null
+static var BG:CanvasLayer = null
 
 # Called on autoload
 func _ready() -> void:
@@ -35,13 +35,37 @@ func _ready() -> void:
 	add_child(World)
 	add_child(UI)
 
+# !
+#
+#	TODO: Static functions don't need to be autoloaded.
+#	So create classes to hold helpers or such things.
+#
+# !
+
+# Instantiate a Node2D scene and add it to a parent
+static func AddChild2D(
+	scene:PackedScene,
+	parent:Node,
+	x:float = 0,
+	y:float = 0,
+	rotation:float = 0,
+	) -> void:
+	# var r:Resource = load(scene path)
+	# assert(r is PackedScene)
+	var n:Node = scene.instantiate()
+	assert(n is Node2D)
+	var n2d:Node2D = n as Node2D
+	n2d.translate(Vector2(x,y))
+	n2d.rotate(rotation)
+	parent.add_child(n)
+
 # Automatically connected to message_logged signal
-func Log(level: int, message:String) -> void:
+static func Log(level: int, message:String) -> void:
 	if level >= Console_min_log_level:
 		print("Log",level,":", message)
 
 # Use anywhere in the code an error would be discarded
-func Check(err: Error) -> void:
+static func Check(err: Error) -> void:
 	if err != OK:
 		print("Check: ",err)
 		push_error(err) # Has stack trace
