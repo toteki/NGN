@@ -17,7 +17,7 @@ config/icon="res://Assets/icon.svg"
 
 [autoload]
 
-God="*res://Global/God.gd"
+Game="*res://Global/Game.gd"
 
 [debug]
 
